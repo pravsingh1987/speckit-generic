@@ -23,7 +23,7 @@ clear 2>/dev/null || true
 echo ""
 echo -e "${CYAN}╔════════════════════════════════════════════════════════════════╗${NC}"
 echo -e "${CYAN}║        ${BOLD}SpecKit - Salesforce Development Accelerator${NC}${CYAN}           ║${NC}"
-echo -e "${CYAN}║                    Salesforce Edition v1.0                     ║${NC}"
+echo -e "${CYAN}║                    Salesforce Edition v1.1                     ║${NC}"
 echo -e "${CYAN}╠════════════════════════════════════════════════════════════════╣${NC}"
 echo -e "${CYAN}║   This installer will guide you through:                       ║${NC}"
 echo -e "${CYAN}║   ${BOLD}Step 1${NC}${CYAN} → Constitution Setup (governance & standards)         ║${NC}"
@@ -92,6 +92,7 @@ cp -r "$SCRIPT_DIR/.specify" "$TARGET_DIR/"
 echo -e "  ${GREEN}✓${NC} SpecKit core (.specify)"
 
 # Agent skills — critical. Verify they actually landed.
+# Install for both Cursor (.cursor/skills) and Claude Code (.claude/skills)
 mkdir -p "$TARGET_DIR/.cursor"
 cp -r "$SCRIPT_DIR/.cursor/skills" "$TARGET_DIR/.cursor/"
 SKILL_COUNT=$(ls "$TARGET_DIR/.cursor/skills" 2>/dev/null | wc -l | tr -d ' ')
@@ -100,7 +101,14 @@ if [ "$SKILL_COUNT" -lt 1 ]; then
     echo -e "  ${YELLOW}If you are running this inside an AI agent/sandbox, run it in a normal terminal instead.${NC}"
     exit 1
 fi
-echo -e "  ${GREEN}✓${NC} Agent skills ($SKILL_COUNT commands)"
+echo -e "  ${GREEN}✓${NC} Cursor agent skills ($SKILL_COUNT commands)"
+
+# Claude Code skills
+if [ -d "$SCRIPT_DIR/.claude/skills" ]; then
+    mkdir -p "$TARGET_DIR/.claude"
+    cp -r "$SCRIPT_DIR/.claude/skills" "$TARGET_DIR/.claude/"
+    echo -e "  ${GREEN}✓${NC} Claude Code agent skills ($SKILL_COUNT commands)"
+fi
 
 # Cursor rules — always-on guardrails (grounding, wireframe anatomy, dashboard enforcement)
 if [ -d "$SCRIPT_DIR/.cursor/rules" ]; then
@@ -433,8 +441,8 @@ echo -e "${CYAN}╔════════════════════�
 echo -e "${CYAN}║                      NEXT STEPS                                ║${NC}"
 echo -e "${CYAN}╠════════════════════════════════════════════════════════════════╣${NC}"
 echo -e "${CYAN}║                                                                ║${NC}"
-echo -e "${CYAN}║  ${BOLD}1. Open in Cursor:${NC}${CYAN}                                           ║${NC}"
-echo -e "${CYAN}║     ${YELLOW}cursor $TARGET_DIR${NC}${CYAN}                                       ║${NC}"
+echo -e "${CYAN}║  ${BOLD}1. Open in Cursor or Claude Code:${NC}${CYAN}                            ║${NC}"
+echo -e "${CYAN}║     ${YELLOW}cursor $TARGET_DIR${NC}${CYAN}  ${DIM}or${NC}${CYAN}  ${YELLOW}claude-code $TARGET_DIR${NC}${CYAN}              ║${NC}"
 echo -e "${CYAN}║                                                                ║${NC}"
 echo -e "${CYAN}║  ${BOLD}2. Review & customize constitution:${NC}${CYAN}                         ║${NC}"
 echo -e "${CYAN}║     ${YELLOW}/speckit-constitution${NC}${CYAN}                                    ║${NC}"

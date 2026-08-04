@@ -179,8 +179,13 @@ if [ "$UPDATE_SKILLS" = true ]; then
         mkdir -p "$TARGET_DIR/.cursor"
         cp -r "$SCRIPT_DIR/.cursor/skills" "$TARGET_DIR/.cursor/"
         SKILL_COUNT=$(ls "$TARGET_DIR/.cursor/skills" 2>/dev/null | wc -l | tr -d ' ')
-        echo -e "  ${GREEN}✓${NC} Updated agent skills ($SKILL_COUNT commands)"
+        echo -e "  ${GREEN}✓${NC} Updated Cursor agent skills ($SKILL_COUNT commands)"
         ((UPDATED_COUNT++))
+    fi
+    if [ -d "$SCRIPT_DIR/.claude/skills" ]; then
+        mkdir -p "$TARGET_DIR/.claude"
+        cp -r "$SCRIPT_DIR/.claude/skills" "$TARGET_DIR/.claude/"
+        echo -e "  ${GREEN}✓${NC} Updated Claude Code agent skills ($SKILL_COUNT commands)"
     fi
 fi
 

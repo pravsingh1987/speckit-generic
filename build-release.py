@@ -27,7 +27,7 @@ INCLUDE_FILES = [
     "README.md",
     "INSTALLATION_GUIDE.md",
 ]
-INCLUDE_DIRS = [".specify", ".cursor", "docs"]
+INCLUDE_DIRS = [".specify", ".cursor", ".claude", "docs"]
 EXCLUDE_DIR_NAMES = {"__pycache__", ".git"}
 EXCLUDE_SUFFIXES = (".pyc", ".pyo", ".bak", ".zip")
 EXCLUDE_FILE_NAMES = {".DS_Store", "Thumbs.db"}

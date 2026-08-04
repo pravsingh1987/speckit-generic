@@ -1,5 +1,6 @@
 {
-  "latest_version": "1.0.0",
-  "download_url": "https://github.com/pravsingh1987/speckit-salesforce/raw/refs/heads/main/speckit-salesforce-v1.0.0.zip",
-  "notes_url": "https://github.com/pravsingh1987/speckit-salesforce"
+  "latest_version": "1.1.0",
+  "download_url": "https://github.com/pravsingh1987/speckit-salesforce/raw/refs/heads/main/speckit-salesforce-v1.1.0.zip",
+  "notes_url": "https://github.com/pravsingh1987/speckit-salesforce",
+  "changes": "Added Claude Code (.claude/skills/) support alongside Cursor; upgraded skills with argument-hints, Devbar token metering, step-level security test suites, Lightning record-page anatomy enforcement in wireframes"
 }
