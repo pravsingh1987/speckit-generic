@@ -21,7 +21,7 @@ If you don't have Jira admin access, use manual sync:
 
 **Commands:**
 - `Sync from Jira` - Full sync of all stories
-- `Mark PR1070767-24 as built` - Update specific story
+- `Mark PROJ-24 as built` - Update specific story
 - `Update progress` - Sync and push to GitHub
 
 ---

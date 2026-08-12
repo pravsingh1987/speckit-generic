@@ -1,6 +1,6 @@
 {
-  "latest_version": "1.1.0",
-  "download_url": "https://github.com/pravsingh1987/speckit-salesforce/raw/refs/heads/main/speckit-salesforce-v1.1.0.zip",
+  "latest_version": "1.2.0",
+  "download_url": "https://github.com/pravsingh1987/speckit-salesforce/raw/refs/heads/main/speckit-salesforce-v1.2.0.zip",
   "notes_url": "https://github.com/pravsingh1987/speckit-salesforce",
-  "changes": "Added Claude Code (.claude/skills/) support alongside Cursor; upgraded skills with argument-hints, Devbar token metering, step-level security test suites, Lightning record-page anatomy enforcement in wireframes"
+  "changes": "Corrected the measured-token formula to SUM(i + o): cache read/write are a breakdown of input_tokens, not additions, so the previous SUM(i + o + cr + cw) counted cached context three times. Ships devbar-tokens.py, which 1.1.0 documented in four places but omitted, plus spec_docx_kit.py for Word specs with a working contents page, and an installable dashboard pre-commit hook via install-hooks.sh. Retains 1.1.0's Claude Code support and argument-hints; Cursor and Claude Code skills are now verified byte-identical at release time."
 }

@@ -1415,9 +1415,9 @@ The one-shot installer depends on two artefacts committed at the repo root:
 ### Step-by-step manual install (if the one-liner is blocked)
 
 ```bash
-curl -L -o speckit-salesforce-v1.0.0.zip "https://github.com/pravsingh1987/speckit-salesforce/raw/refs/heads/main/speckit-salesforce-v1.0.0.zip"
-unzip -q speckit-salesforce-v1.0.0.zip
-bash speckit-salesforce-v1.0.0/install.sh . --yes   # drop --yes for the interactive wizard
+curl -L -o speckit-salesforce-v1.2.0.zip "https://github.com/pravsingh1987/speckit-salesforce/raw/refs/heads/main/speckit-salesforce-v1.2.0.zip"
+unzip -q speckit-salesforce-v1.2.0.zip
+bash speckit-salesforce-v1.2.0/install.sh . --yes   # drop --yes for the interactive wizard
 ```
 
 ### Cutting a new release
@@ -1445,6 +1445,6 @@ bash speckit-salesforce-v1.0.0/install.sh . --yes   # drop --yes for the interac
 
 | Component | Version |
 |-----------|---------|
-| SpecKit Salesforce | 1.0.0 |
+| SpecKit Salesforce | 1.2.0 |
 | Base SpecKit | 0.10.1 |
 | Last Updated | June 2026 |

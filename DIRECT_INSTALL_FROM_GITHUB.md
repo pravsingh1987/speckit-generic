@@ -4,11 +4,11 @@ Install SpecKit for Salesforce directly from the GitHub-hosted release zip — n
 
 Current published version:
 
-- `1.0.0`
+- `1.2.0`
 
 Current download URL:
 
-- `https://github.com/pravsingh1987/speckit-salesforce/raw/refs/heads/main/speckit-salesforce-v1.0.0.zip`
+- `https://github.com/pravsingh1987/speckit-salesforce/raw/refs/heads/main/speckit-salesforce-v1.2.0.zip`
 
 ## Prerequisites
 
@@ -74,19 +74,19 @@ ls .cursor/rules    # grounding-guardrails.mdc, wireframe-salesforce-anatomy.mdc
 ### 1. Download the latest zip
 
 ```bash
-curl -L -o speckit-salesforce-v1.0.0.zip "https://github.com/pravsingh1987/speckit-salesforce/raw/refs/heads/main/speckit-salesforce-v1.0.0.zip"
+curl -L -o speckit-salesforce-v1.2.0.zip "https://github.com/pravsingh1987/speckit-salesforce/raw/refs/heads/main/speckit-salesforce-v1.2.0.zip"
 ```
 
 ### 2. Extract the zip
 
 ```bash
-unzip speckit-salesforce-v1.0.0.zip
+unzip speckit-salesforce-v1.2.0.zip
 ```
 
 ### 3. Install into your current project
 
 ```bash
-bash speckit-salesforce-v1.0.0/install.sh . --yes
+bash speckit-salesforce-v1.2.0/install.sh . --yes
 ```
 
 Drop `--yes` if you want the full interactive 5-step configuration wizard instead.

@@ -1,0 +1,52 @@
+#!/bin/bash
+# ─────────────────────────────────────────────────────────────────────────────
+# Auto-sync the progress dashboard at commit time.
+#
+# Model: token/progress data lives ONLY in docs/progress-tracker.json and is
+# edited locally as you work. This hook runs on every `git commit` and:
+#   1. Regenerates each dashboard's embedded offline-fallback from its
+#      sibling progress-tracker.json (via sync-dashboard-data.py).
+#   2. Stages any dashboard HTML that changed, so it lands in the SAME commit.
+#
+# Net effect: you only ever edit the JSON; the shared dashboard stays in sync
+# automatically the moment your work enters the git repo. `git push` shares it.
+#
+# Activate once per clone:  bash .specify/scripts/install-hooks.sh
+# The hook is non-fatal: if python3 or the sync script is missing, the commit
+# proceeds normally.
+# ─────────────────────────────────────────────────────────────────────────────
+
+ROOT="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
+
+# Locate the sync script (repo may keep it in a few standard spots)
+SYNC=""
+for c in \
+    "$ROOT/scripts/sync-dashboard-data.py" \
+    "$ROOT/.specify/scripts/sync-dashboard-data.py" \
+    "$ROOT"/*/.specify/scripts/sync-dashboard-data.py; do
+    [ -f "$c" ] && SYNC="$c" && break
+done
+
+[ -z "$SYNC" ] && exit 0
+command -v python3 >/dev/null 2>&1 || exit 0
+
+# 0. Recompute the test-case metrics block (manual/automated per epic + emitted
+#    Apex/Jest suite counts) into every progress-tracker.json. Non-fatal.
+TCSYNC=""
+for c in \
+    "$ROOT/scripts/sync-testcases-data.py" \
+    "$ROOT/.specify/scripts/sync-testcases-data.py" \
+    "$ROOT"/*/.specify/scripts/sync-testcases-data.py; do
+    [ -f "$c" ] && TCSYNC="$c" && break
+done
+[ -n "$TCSYNC" ] && python3 "$TCSYNC" >/dev/null 2>&1
+
+# 1. Refresh embedded fallback data from progress-tracker.json
+python3 "$SYNC" "$ROOT" >/dev/null 2>&1 || exit 0
+
+# 2. Stage any dashboards / trackers the sync changed so they join this commit
+git ls-files --modified | grep -E '(progress-dashboard\.html|progress-tracker\.json)$' | while read -r f; do
+    git add "$f"
+done
+
+exit 0

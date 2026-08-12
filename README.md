@@ -148,6 +148,57 @@ Files in `.specify/memory/` are **automatically consulted** by all commands:
 - Jira status sync
 - GitHub Pages ready
 
+<!-- speckit-extras:start -->
+### Toolkit Scripts
+
+Four scripts in `.specify/scripts/` cover the jobs the skills alone cannot do. The first two
+run on demand; the last two are one-time setup.
+
+| Script | What it does |
+|--------|--------------|
+| `devbar-tokens.py` | Reports **measured** token usage from Devbar's local database, scoped to a single workspace so separate clients are never mixed into one figure. Without it the dashboard shows estimates only. |
+| `spec_docx_kit.py` | Generates Word specifications with a contents page that navigates to real content and carries page numbers, so client-facing documents are regenerated from source instead of hand-edited. Needs `pip install python-docx`. |
+| `install-hooks.sh` | Activates the dashboard's auto-refresh pre-commit hook. |
+| `hooks/pre-commit` | The hook itself: regenerates each dashboard's embedded data from its sibling `progress-tracker.json` and stages the result into the same commit. |
+
+#### Activate the dashboard hook
+
+The dashboard is only trustworthy if it refreshes itself. Skip this and you will edit
+`progress-tracker.json`, commit, and the published dashboard will still show the previous
+state — which is worse than being visibly stale, because it looks current.
+
+```bash
+bash .specify/scripts/install-hooks.sh
+```
+
+Confirm it took effect:
+
+```bash
+git commit --allow-empty -m "hook check" && git show --stat HEAD
+```
+
+`progress-dashboard.html` should appear in that commit. The hook is non-fatal, so a missing
+`python3` will never block a commit.
+
+There is a second route — `git config core.hooksPath .githooks` — but it replaces the hook
+directory wholesale, which silently stops any hook already in `.git/hooks/` from firing,
+including ones installed by Husky, pre-commit.com or a linter. `install-hooks.sh` copies the
+hook instead, leaves `core.hooksPath` alone, and refuses to overwrite a different existing
+hook unless passed `--force`.
+
+#### Measuring tokens
+
+```bash
+python3 .specify/scripts/devbar-tokens.py                    # this workspace
+python3 .specify/scripts/devbar-tokens.py --all-workspaces   # the per-project split
+```
+
+Totals are `SUM(i + o)` per generation. `cache_read` and `cache_write` are a *breakdown* of
+`input_tokens`, not additions to it, so adding all four counts cached context three times and
+roughly doubles the figure. Coverage begins when Devbar was installed and only sees the local
+machine, so it cannot backfill history or include other contributors' work.
+<!-- speckit-extras:end -->
+
 ## Usage Workflow
 
 ### Recommended Order
@@ -312,5 +363,5 @@ For issues or enhancements, contact your SpecKit administrator.
 
 ## Version
 
-- **SpecKit Salesforce**: 1.0.0
+- **SpecKit Salesforce**: 1.2.0
 - **Based on**: SpecKit 0.10.1

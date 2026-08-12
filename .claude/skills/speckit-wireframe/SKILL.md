@@ -31,6 +31,11 @@ This command bridges the gap between specification and implementation by produci
 - Spec includes **Navigation & Interactions** section
 - Figma MCP is available and authenticated
 
+> **MANDATORY**: Every wireframe MUST follow the real Salesforce Lightning record-page anatomy
+> defined in `.cursor/rules/wireframe-salesforce-anatomy.mdc` (global header → app nav → record
+> header with compact-layout highlights → body of standard/custom regions labelled `[Standard: …]`
+> / `[LWC: …]`). Use REAL object/field API names from the org — never invent fields.
+
 ## Outline
 
 1. **Setup**: Run `.specify/scripts/bash/check-prerequisites.sh --json` to get FEATURE_DIR, or use `$ARGUMENTS` if a specific feature is provided.
@@ -112,7 +117,8 @@ Do not invent a generic app shell.
 3. **Record header / highlights panel**:
    - Object icon + **object type label**, then the **record name** (H1).
    - **Compact Layout highlights row** — a horizontal strip of 5–7 real key–value fields (label on top,
-     value below), exactly like the object's Compact Layout.
+     value below), exactly like the object's Compact Layout. Take the fields from the org, not from
+     imagination: `sf sobject describe -s <Object>` or the Compact Layout in Setup.
      *Account example:* Account Name · Account Type · Industry · Phone · Billing City · Owner.
    - **Action buttons** right-aligned: standard (**Follow · Edit · Delete · ▾**) + custom quick actions.
 4. **Body** — label every block by its source: `[Standard: Details]`, `[Standard: Related List]`,
@@ -120,8 +126,11 @@ Do not invent a generic app shell.
 5. **Utility bar** (bottom) only when the flow needs it.
 
 Rules: always render the compact-layout highlights row with real API labels; tag each region as
-Standard vs LWC; prefer declarative/standard layouts first and introduce LWCs only where the spec
-requires them (Constitution Principles I & IX).
+Standard vs LWC so a reviewer can see at a glance how much is configuration and how much is custom
+code; prefer declarative/standard layouts first and introduce LWCs only where the spec requires them
+(Constitution Principles I & IX). Labelling regions this way is what turns a wireframe into an
+estimate — three `[Standard:]` blocks and one `[LWC:]` is a very different piece of work from four
+custom components.
 
 ## Figma Design Guidelines
 

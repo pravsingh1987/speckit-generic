@@ -2,7 +2,7 @@
 name: speckit-dashboard
 description: Generate and manage the project progress dashboard with Jira sync, token tracking, and GitHub Pages publishing.
 argument-hint: Optional: sync target or leave blank
-version: 1.1.0
+version: 1.2.0
 ---
 
 # SpecKit Dashboard
@@ -52,6 +52,20 @@ git config core.hooksPath .githooks
 
 The hook lives at `.githooks/pre-commit` (committed, so it travels with the repo) and is
 non-fatal — if `python3` is unavailable the commit still succeeds.
+
+Two caveats worth knowing before you run that command. `core.hooksPath` replaces the hook
+directory wholesale, so any hooks already in `.git/hooks/` — including ones installed by
+Husky, pre-commit.com or a linter — stop firing silently. And a freshly installed project
+only has `.githooks/` if the installer put it there. If either applies, use the copy-based
+installer instead, which leaves `core.hooksPath` alone and refuses to clobber an existing
+hook:
+
+```bash
+bash .specify/scripts/install-hooks.sh
+```
+
+Verify whichever route you took with `git commit --allow-empty -m "hook check"` and confirm
+`progress-dashboard.html` appears in `git show --stat HEAD`.
 
 **Your only job:** edit `progress-tracker.json`, then `git commit` + `git push`. Everything
 else is automatic.
@@ -189,17 +203,28 @@ the `MAX` of its rows, not the sum — summing rows directly roughly doubles the
 answer:
 
 ```
-per generation:  i = MAX(input_tokens)    o  = MAX(output_tokens)
-                cr = MAX(cache_read)      cw = MAX(cache_write)
+per generation:  i  = MAX(input_tokens)        o  = MAX(output_tokens)
+                 cr = MAX(cache_read_tokens)   cw = MAX(cache_write_tokens)
 
-total                 = SUM(i + o + cr + cw)      over generations
-tokens per generation = SUM(i + cr) / COUNT(*)    output excluded, as Devbar defines it
+total tokens          = SUM(i + o)         over generations
+excluding cache read  = SUM(i + o - cr)    tracks spend
+fresh input           = SUM(i - cr - cw)
+tokens per generation = SUM(i) / COUNT(*)  context volume per turn
 ```
 
-Filtering happens *after* grouping so a generation is never split. `cache_read`
-is context re-read on every model call inside a turn and dominates the total, so
-`excluding_cache_read` is reported alongside as the figure that tracks cost more
-closely.
+> **`input_tokens` already contains the cached tokens.** `cache_read_tokens` and
+> `cache_write_tokens` are a *breakdown* of input, not additions to it — measured
+> over a real repo's history the residual `i - cr - cw` never exceeded a few
+> hundred tokens. So `SUM(i + o + cr + cw)` counts cached context three times and
+> roughly doubles the honest figure. An earlier version of this tooling did
+> exactly that; if you see that formula anywhere, it is the bug, not the spec.
+
+Filtering happens *after* grouping so a generation is never split. `cache_read` is
+context re-read on every model call inside a turn and is ~95% of all input, which
+is why the measured number dwarfs the estimate even once the double-count is
+removed: the estimate counts what was *written*, this counts every token
+*processed*. Because cache reads bill far below fresh input,
+`excluding_cache_read` is the figure that tracks cost.
 
 Coverage starts when Devbar was installed, so earlier work is absent and this
 cannot backfill history. It also sees only the local machine, so other
